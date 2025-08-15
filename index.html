@@ -36,7 +36,7 @@
     p {
       line-height: 1.5;
     }
-    button {
+    button, a {
       display: block;
       margin: 10px auto;
       padding: 12px 20px;
@@ -46,23 +46,12 @@
       color: white;
       cursor: pointer;
       font-size: 16px;
+      text-align: center;
+      text-decoration: none;
       transition: background 0.3s ease;
     }
-    button:hover {
+    button:hover, a:hover {
       background: #0056b3;
-    }
-    .question {
-      margin: 15px 0;
-      padding: 10px;
-      background: #f9fbfd;
-      border-radius: 8px;
-      opacity: 0;
-      transform: translateY(10px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-    .question.active {
-      opacity: 1;
-      transform: translateY(0);
     }
     .hidden {
       display: none;
@@ -78,92 +67,18 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div id="home">
-      <h1>💰 Money Mentor</h1>
-      <p>Welcome! Let’s build your money skills step-by-step. Take our quick quiz to get tailored tips for your financial journey.</p>
-      <button onclick="startQuiz()">Take the Quiz</button>
-      <button onclick="showTip()">Get Today's Money Tip</button>
-      <p id="dailyTip"></p>
-    </div>
-
-    <div id="quiz" class="hidden">
-      <h2>Quick Financial Quiz</h2>
-      <div id="question1" class="question">
-        <p>1. Do you currently have a written budget?</p>
-        <button onclick="answer(1, 'yes')">Yes</button>
-        <button onclick="answer(1, 'no')">No</button>
-      </div>
-      <div id="question2" class="question hidden">
-        <p>2. Do you have any emergency savings?</p>
-        <button onclick="answer(2, 'yes')">Yes</button>
-        <button onclick="answer(2, 'no')">No</button>
-      </div>
-      <div id="question3" class="question hidden">
-        <p>3. Are you currently investing for retirement?</p>
-        <button onclick="answer(3, 'yes')">Yes</button>
-        <button onclick="answer(3, 'no')">No</button>
-      </div>
-      <button id="resultsBtn" class="hidden" onclick="showResults()">See My Advice</button>
-    </div>
-
-    <div id="results" class="hidden">
-      <h2>Your Advice</h2>
-      <p id="adviceText"></p>
-      <button onclick="goHome()">Back to Home</button>
-    </div>
+  <div class="container" id="home">
+    <h1>💰 Money Mentor</h1>
+    <p>Welcome! Let’s build your money skills step-by-step. Pick a tool below to start your journey.</p>
+    <a href="quiz.html">Take the Quiz</a>
+    <a href="saving.html">Saving Goals Tracker</a>
+    <a href="spending.html">Simple Spending Log</a>
+    <a href="investing.html">Beginner Investing Resources</a>
+    <a href="reminders.html">Email Reminders for Money Tips</a>
+    <a href="challenges.html">Gamified Challenges</a>
+    <p id="dailyTip"></p>
   </div>
-
   <script>
-    let answers = {};
-    let currentQuestion = 1;
-
-    function startQuiz() {
-      document.getElementById('home').classList.add('hidden');
-      document.getElementById('quiz').classList.remove('hidden');
-      showQuestion(1);
-    }
-
-    function showQuestion(num) {
-      document.querySelectorAll('.question').forEach(q => q.classList.add('hidden'));
-      const qEl = document.getElementById(`question${num}`);
-      if (qEl) {
-        qEl.classList.remove('hidden');
-        setTimeout(() => qEl.classList.add('active'), 10);
-      }
-    }
-
-    function answer(question, response) {
-      answers[question] = response;
-      currentQuestion++;
-      if (document.getElementById(`question${currentQuestion}`)) {
-        showQuestion(currentQuestion);
-      } else {
-        document.getElementById('resultsBtn').classList.remove('hidden');
-      }
-    }
-
-    function showResults() {
-      let advice = "";
-
-      if (answers[1] === 'no') advice += "Start tracking your income and expenses for a month. Use a free budgeting app or spreadsheet. ";
-      if (answers[2] === 'no') advice += "Aim to save $500 as a starter emergency fund, then grow it to cover 3-6 months of expenses. ";
-      if (answers[3] === 'no') advice += "Learn about 401(k)s or IRAs and start contributing, even a small amount. ";
-
-      if (!advice) advice = "You’re already building strong financial habits — keep going!";
-
-      document.getElementById('adviceText').innerText = advice;
-      document.getElementById('quiz').classList.add('hidden');
-      document.getElementById('results').classList.remove('hidden');
-    }
-
-    function goHome() {
-      document.getElementById('results').classList.add('hidden');
-      document.getElementById('home').classList.remove('hidden');
-      answers = {};
-      currentQuestion = 1;
-    }
-
     function showTip() {
       const tips = [
         "Pay yourself first: save before you spend.",
@@ -174,11 +89,9 @@
         "Separate wants from needs before making purchases.",
         "Use windfalls (bonuses, tax refunds) to boost savings instead of spending all of it."
       ];
-
       const lastTipDate = localStorage.getItem('lastTipDate');
       const today = new Date().toDateString();
       let tip;
-
       if (lastTipDate === today) {
         tip = localStorage.getItem('dailyTip');
       } else {
@@ -186,14 +99,9 @@
         localStorage.setItem('dailyTip', tip);
         localStorage.setItem('lastTipDate', today);
       }
-
       document.getElementById('dailyTip').innerText = tip;
     }
-
-    // Show tip automatically when page loads
-    window.onload = () => {
-      showTip();
-    };
+    window.onload = showTip;
   </script>
 </body>
 </html>
