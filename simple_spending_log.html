@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Spending Log - Money Mentor</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7fa;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    h1 {
+      text-align: center;
+      color: #28a745;
+    }
+    label, p {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, button, select {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #1e7e34;
+    }
+    .log-item {
+      background: #e6f4ea;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 10px;
+    }
+    a {
+      display: inline-block;
+      margin-top: 15px;
+      text-decoration: none;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Simple Spending Log</h1>
+    <label for="spendDate">Date:</label>
+    <input type="date" id="spendDate" />
+
+    <label for="spendCategory">Category:</label>
+    <select id="spendCategory">
+      <option value="Food">Food</option>
+      <option value="Transport">Transport</option>
+      <option value="Bills">Bills</option>
+      <option value="Shopping">Shopping</option>
+      <option value="Other">Other</option>
+    </select>
+
+    <label for="spendAmount">Amount ($):</label>
+    <input type="number" id="spendAmount" placeholder="e.g. 25" />
+
+    <button onclick="addSpending()">Add Spending</button>
+
+    <div id="spendingList"></div>
+
+    <a href="index.html">⬅ Back to Home</a>
+  </div>
+
+  <script>
+    function addSpending() {
+      const date = document.getElementById('spendDate').value;
+      const category = document.getElementById('spendCategory').value;
+      const amount = parseFloat(document.getElementById('spendAmount').value);
+
+      if (!date || !category || isNaN(amount)) {
+        alert('Please fill in all fields.');
+        return;
+      }
+
+      const logItem = document.createElement('div');
+      logItem.className = 'log-item';
+      logItem.innerHTML = `<strong>${date}</strong> - ${category}: $${amount.toFixed(2)}`;
+
+      document.getElementById('spendingList').appendChild(logItem);
+      saveSpendings();
+
+      document.getElementById('spendDate').value = '';
+      document.getElementById('spendCategory').value = 'Food';
+      document.getElementById('spendAmount').value = '';
+    }
+
+    function saveSpendings() {
+      const spendings = [];
+      document.querySelectorAll('.log-item').forEach(item => {
+        spendings.push(item.innerHTML);
+      });
+      localStorage.setItem('spendingLog', JSON.stringify(spendings));
+    }
+
+    function loadSpendings() {
+      const spendings = JSON.parse(localStorage.getItem('spendingLog')) || [];
+      spendings.forEach(html => {
+        const logItem = document.createElement('div');
+        logItem.className = 'log-item';
+        logItem.innerHTML = html;
+        document.getElementById('spendingList').appendChild(logItem);
+      });
+    }
+
+    window.onload = loadSpendings;
+  </script>
+</body>
+</html>
