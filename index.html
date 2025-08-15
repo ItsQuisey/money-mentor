@@ -6,10 +6,10 @@
   <title>Money Mentor</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f0f2f5;
+      background: #f5f7fa;
       color: #333;
       display: flex;
       justify-content: center;
@@ -18,45 +18,66 @@
     }
     .container {
       background: #fff;
-      padding: 20px;
-      border-radius: 10px;
+      padding: 25px;
+      border-radius: 12px;
       max-width: 500px;
       width: 100%;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     h1, h2 {
       text-align: center;
+      color: #007bff;
+    }
+    p {
+      line-height: 1.5;
     }
     button {
       display: block;
       margin: 10px auto;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       background: #007bff;
       color: white;
       cursor: pointer;
       font-size: 16px;
+      transition: background 0.3s ease;
     }
     button:hover {
       background: #0056b3;
     }
     .question {
       margin: 15px 0;
+      padding: 10px;
+      background: #f9fbfd;
+      border-radius: 8px;
     }
     .hidden {
       display: none;
+    }
+    #dailyTip {
+      background: #e9f5ff;
+      border-left: 4px solid #007bff;
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div id="home">
-      <h1>Money Mentor</h1>
-      <p>Welcome! Let’s help you build better money habits. Take a short quiz and get your first steps toward financial confidence.</p>
+      <h1>💰 Money Mentor</h1>
+      <p>Welcome! Let’s build your money skills step-by-step. Take our quick quiz to get tailored tips for your financial journey.</p>
       <button onclick="startQuiz()">Take the Quiz</button>
       <button onclick="showTip()">Get a Random Money Tip</button>
-      <p id="dailyTip" style="margin-top: 15px; font-weight: bold;"></p>
+      <p id="dailyTip"></p>
     </div>
 
     <div id="quiz" class="hidden">
@@ -101,11 +122,11 @@
     function showResults() {
       let advice = "";
 
-      if (answers[1] === 'no') advice += "Start by tracking your income and expenses for a month to see where your money goes. ";
-      if (answers[2] === 'no') advice += "Aim to save at least $500 as a starter emergency fund. ";
-      if (answers[3] === 'no') advice += "Learn the basics of retirement accounts like 401(k)s or IRAs and start small. ";
+      if (answers[1] === 'no') advice += "Start tracking your income and expenses for a month. Use a free budgeting app or spreadsheet. ";
+      if (answers[2] === 'no') advice += "Aim to save $500 as a starter emergency fund, then grow it to cover 3-6 months of expenses. ";
+      if (answers[3] === 'no') advice += "Learn about 401(k)s or IRAs and start contributing, even a small amount. ";
 
-      if (!advice) advice = "You're on the right track! Keep building your good habits.";
+      if (!advice) advice = "You’re already building strong financial habits — keep going!";
 
       document.getElementById('adviceText').innerText = advice;
       document.getElementById('quiz').classList.add('hidden');
@@ -124,7 +145,9 @@
         "Avoid lifestyle creep: keep expenses steady as income grows.",
         "Track every dollar for one month.",
         "Invest consistently, even in small amounts.",
-        "Build an emergency fund before investing heavily."
+        "Build an emergency fund before investing heavily.",
+        "Separate wants from needs before making purchases.",
+        "Use windfalls (bonuses, tax refunds) to boost savings instead of spending all of it."
       ];
       const randomTip = tips[Math.floor(Math.random() * tips.length)];
       document.getElementById('dailyTip').innerText = randomTip;
