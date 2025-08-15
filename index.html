@@ -56,6 +56,13 @@
       padding: 10px;
       background: #f9fbfd;
       border-radius: 8px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .question.active {
+      opacity: 1;
+      transform: translateY(0);
     }
     .hidden {
       display: none;
@@ -76,28 +83,28 @@
       <h1>💰 Money Mentor</h1>
       <p>Welcome! Let’s build your money skills step-by-step. Take our quick quiz to get tailored tips for your financial journey.</p>
       <button onclick="startQuiz()">Take the Quiz</button>
-      <button onclick="showTip()">Get a Random Money Tip</button>
+      <button onclick="showTip()">Get Today's Money Tip</button>
       <p id="dailyTip"></p>
     </div>
 
     <div id="quiz" class="hidden">
       <h2>Quick Financial Quiz</h2>
-      <div class="question">
+      <div id="question1" class="question">
         <p>1. Do you currently have a written budget?</p>
         <button onclick="answer(1, 'yes')">Yes</button>
         <button onclick="answer(1, 'no')">No</button>
       </div>
-      <div class="question">
+      <div id="question2" class="question hidden">
         <p>2. Do you have any emergency savings?</p>
         <button onclick="answer(2, 'yes')">Yes</button>
         <button onclick="answer(2, 'no')">No</button>
       </div>
-      <div class="question">
+      <div id="question3" class="question hidden">
         <p>3. Are you currently investing for retirement?</p>
         <button onclick="answer(3, 'yes')">Yes</button>
         <button onclick="answer(3, 'no')">No</button>
       </div>
-      <button onclick="showResults()">See My Advice</button>
+      <button id="resultsBtn" class="hidden" onclick="showResults()">See My Advice</button>
     </div>
 
     <div id="results" class="hidden">
@@ -109,14 +116,31 @@
 
   <script>
     let answers = {};
+    let currentQuestion = 1;
 
     function startQuiz() {
       document.getElementById('home').classList.add('hidden');
       document.getElementById('quiz').classList.remove('hidden');
+      showQuestion(1);
+    }
+
+    function showQuestion(num) {
+      document.querySelectorAll('.question').forEach(q => q.classList.add('hidden'));
+      const qEl = document.getElementById(`question${num}`);
+      if (qEl) {
+        qEl.classList.remove('hidden');
+        setTimeout(() => qEl.classList.add('active'), 10);
+      }
     }
 
     function answer(question, response) {
       answers[question] = response;
+      currentQuestion++;
+      if (document.getElementById(`question${currentQuestion}`)) {
+        showQuestion(currentQuestion);
+      } else {
+        document.getElementById('resultsBtn').classList.remove('hidden');
+      }
     }
 
     function showResults() {
@@ -137,6 +161,7 @@
       document.getElementById('results').classList.add('hidden');
       document.getElementById('home').classList.remove('hidden');
       answers = {};
+      currentQuestion = 1;
     }
 
     function showTip() {
@@ -149,9 +174,26 @@
         "Separate wants from needs before making purchases.",
         "Use windfalls (bonuses, tax refunds) to boost savings instead of spending all of it."
       ];
-      const randomTip = tips[Math.floor(Math.random() * tips.length)];
-      document.getElementById('dailyTip').innerText = randomTip;
+
+      const lastTipDate = localStorage.getItem('lastTipDate');
+      const today = new Date().toDateString();
+      let tip;
+
+      if (lastTipDate === today) {
+        tip = localStorage.getItem('dailyTip');
+      } else {
+        tip = tips[Math.floor(Math.random() * tips.length)];
+        localStorage.setItem('dailyTip', tip);
+        localStorage.setItem('lastTipDate', today);
+      }
+
+      document.getElementById('dailyTip').innerText = tip;
     }
+
+    // Show tip automatically when page loads
+    window.onload = () => {
+      showTip();
+    };
   </script>
 </body>
 </html>
