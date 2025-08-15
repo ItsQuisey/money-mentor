@@ -3,135 +3,166 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saving Goals Tracker - Money Mentor</title>
+  <title>Savings Goals Tracker - Money Mentor</title>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f7fa;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    h1 {
-      text-align: center;
-      color: #007bff;
-    }
-    label, p {
-      display: block;
-      margin: 10px 0 5px;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    button {
-      background: #007bff;
-      color: white;
-      border: none;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background: #0056b3;
-    }
-    .goal-item {
-      background: #e9f5ff;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 10px;
-    }
-    a {
-      display: inline-block;
-      margin-top: 15px;
-      text-decoration: none;
-      color: #007bff;
-    }
+    body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background: #f5f7fa; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    .container { background: #fff; padding: 25px; border-radius: 12px; max-width: 680px; width: 100%; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+    h1 { text-align: center; color: #28a745; margin-top: 0; }
+    label { display: block; margin: 10px 0 6px; }
+    input, button, select { width: 100%; padding: 12px; margin-bottom: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; }
+    button { background: #28a745; color: #fff; border: none; cursor: pointer; transition: background .25s ease; }
+    button:hover { background: #1e7e34; }
+
+    .row { display: flex; gap: 10px; }
+    .row > * { flex: 1; }
+
+    .goal { background: #e6f4ea; padding: 16px; border-radius: 10px; margin-bottom: 14px; position: relative; overflow: hidden; }
+    .goal h3 { margin: 0 0 6px; color: #1e7e34; }
+    .delete-btn { position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border-radius: 50%; border: none; background: #dc3545; color: #fff; font-weight: 700; line-height: 26px; text-align: center; cursor: pointer; z-index: 2; }
+    .delete-btn:focus { outline: 2px solid rgba(220,53,69,.5); }
+    .delete-btn:hover { filter: brightness(0.95); }
+
+    .progress-wrap { margin-top: 8px; }
+    .progress-bar { background: #d9e6dc; border-radius: 8px; overflow: hidden; height: 22px; }
+    .progress { background: #28a745; height: 100%; width: 0%; transition: width .35s ease; }
+    .progress-text { font-size: 13px; color: #2f5132; margin-top: 6px; }
+
+    .add-more { display: flex; gap: 10px; align-items: center; }
+    .add-more input { flex: 3; font-size: 18px; }
+    .add-more button { flex: 2; }
+
+    a { display: inline-block; margin-top: 12px; text-decoration: none; color: #28a745; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Saving Goals Tracker</h1>
-    <label for="goalName">Goal Name:</label>
-    <input type="text" id="goalName" placeholder="e.g. Emergency Fund" />
+    <h1>Savings Goals Tracker</h1>
 
-    <label for="goalAmount">Target Amount ($):</label>
-    <input type="number" id="goalAmount" placeholder="e.g. 5000" />
+    <label for="goalName">Goal Name</label>
+    <input id="goalName" type="text" placeholder="e.g. Emergency Fund" />
 
-    <label for="savedAmount">Already Saved ($):</label>
-    <input type="number" id="savedAmount" placeholder="e.g. 1500" />
+    <div class="row">
+      <div>
+        <label for="goalTarget">Target Amount ($)</label>
+        <input id="goalTarget" type="number" step="0.01" min="0" placeholder="e.g. 1000" />
+      </div>
+      <div>
+        <label for="goalSaved">Already Saved ($)</label>
+        <input id="goalSaved" type="number" step="0.01" min="0" placeholder="e.g. 200" />
+      </div>
+    </div>
 
-    <button onclick="addGoal()">Add Goal</button>
+    <button id="addGoalBtn" type="button">Add Goal</button>
 
-    <div id="goalList"></div>
+    <h3>Add to Existing Goal</h3>
+    <label for="goalSelect">Select Goal</label>
+    <select id="goalSelect"></select>
+
+    <div class="add-more">
+      <input id="addAmount" type="number" step="0.01" min="0" placeholder="e.g. 50.00" />
+      <button id="addMoreBtn" type="button">Add More</button>
+    </div>
+
+    <div id="goalsList"></div>
 
     <a href="index.html">⬅ Back to Home</a>
   </div>
 
   <script>
-    function addGoal() {
-      const name = document.getElementById('goalName').value;
-      const target = parseFloat(document.getElementById('goalAmount').value);
-      const saved = parseFloat(document.getElementById('savedAmount').value);
+    // ------- State (with robust IDs) -------
+    let goals = loadGoals();
 
-      if (!name || isNaN(target) || isNaN(saved)) {
-        alert('Please fill in all fields.');
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,8); }
+    function loadGoals(){
+      try { const raw = JSON.parse(localStorage.getItem('savingsGoals')); return Array.isArray(raw) ? raw : []; }
+      catch(e){ return []; }
+    }
+    function saveGoals(){ localStorage.setItem('savingsGoals', JSON.stringify(goals)); }
+
+    const $ = (id) => document.getElementById(id);
+
+    function renderGoals(){
+      const list = $('goalsList');
+      const select = $('goalSelect');
+      list.innerHTML = '';
+      select.innerHTML = '<option value="">-- Select a Goal --</option>';
+
+      goals.forEach(g => {
+        const percent = g.target > 0 ? Math.min((g.saved / g.target) * 100, 100) : 0;
+        const wrap = document.createElement('div');
+        wrap.className = 'goal';
+        wrap.innerHTML = `
+          <button class="delete-btn" title="Delete" aria-label="Delete goal" data-id="${g.id}">×</button>
+          <h3>${g.name}</h3>
+          <p>Saved: $${g.saved.toFixed(2)} / $${g.target.toFixed(2)}</p>
+          <div class="progress-wrap">
+            <div class="progress-bar"><div class="progress" style="width:${percent}%"></div></div>
+            <div class="progress-text">${percent.toFixed(1)}% to goal</div>
+          </div>`;
+        list.appendChild(wrap);
+
+        const opt = document.createElement('option');
+        opt.value = g.id; // use stable id
+        opt.textContent = g.name;
+        select.appendChild(opt);
+      });
+    }
+
+    function addGoal(){
+      const name = $('goalName').value.trim();
+      const target = parseFloat($('goalTarget').value);
+      const saved = parseFloat($('goalSaved').value);
+      if (!name || isNaN(target) || isNaN(saved) || target < 0 || saved < 0) {
+        alert('Please provide a name and non-negative numbers for target and saved.');
         return;
       }
-
-      const progress = Math.min((saved / target) * 100, 100).toFixed(1);
-
-      const goalItem = document.createElement('div');
-      goalItem.className = 'goal-item';
-      goalItem.innerHTML = `<strong>${name}</strong><br>Saved: $${saved} / $${target} (${progress}%)`;
-
-      document.getElementById('goalList').appendChild(goalItem);
+      goals.push({ id: uid(), name, target, saved });
       saveGoals();
-
-      document.getElementById('goalName').value = '';
-      document.getElementById('goalAmount').value = '';
-      document.getElementById('savedAmount').value = '';
+      renderGoals();
+      $('goalName').value = '';
+      $('goalTarget').value = '';
+      $('goalSaved').value = '';
     }
 
-    function saveGoals() {
-      const goals = [];
-      document.querySelectorAll('.goal-item').forEach(item => {
-        goals.push(item.innerHTML);
-      });
-      localStorage.setItem('savingGoals', JSON.stringify(goals));
+    function addToSelectedGoal(){
+      const id = $('goalSelect').value;
+      const amt = parseFloat($('addAmount').value);
+      if (!id) { alert('Select a goal.'); return; }
+      if (isNaN(amt) || amt <= 0) { alert('Enter a positive amount.'); return; }
+      const goal = goals.find(g => g.id === id);
+      if (!goal) return;
+      goal.saved += amt;
+      saveGoals();
+      renderGoals();
+      $('addAmount').value = '';
     }
 
-    function loadGoals() {
-      const goals = JSON.parse(localStorage.getItem('savingGoals')) || [];
-      goals.forEach(html => {
-        const goalItem = document.createElement('div');
-        goalItem.className = 'goal-item';
-        goalItem.innerHTML = html;
-        document.getElementById('goalList').appendChild(goalItem);
-      });
+    function deleteById(id){
+      const idx = goals.findIndex(g => g.id === id);
+      if (idx === -1) return;
+      if (!confirm('Delete this goal?')) return;
+      const selectedId = $('goalSelect').value;
+      goals.splice(idx, 1);
+      saveGoals();
+      renderGoals();
+      // clear selection if we deleted the selected one
+      if (selectedId === id) $('goalSelect').value = '';
     }
 
-    window.onload = loadGoals;
+    // ------- Events -------
+    $('addGoalBtn').addEventListener('click', addGoal);
+    $('addMoreBtn').addEventListener('click', addToSelectedGoal);
+
+    // Event delegation for delete buttons
+    $('goalsList').addEventListener('click', (e) => {
+      const btn = e.target.closest('.delete-btn');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      if (id) deleteById(id);
+    });
+
+    // Initial render
+    renderGoals();
   </script>
 </body>
 </html>
