@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Money Mentor</title>
+  <title>Money Mentor - Home</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, sans-serif;
@@ -11,97 +11,64 @@
       padding: 0;
       background: #f5f7fa;
       color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-    }
-    .container {
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      max-width: 500px;
-      width: 100%;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      animation: fadeIn 0.5s ease-in-out;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    h1, h2 {
       text-align: center;
-      color: #007bff;
     }
-    p {
-      line-height: 1.5;
-    }
-    button, a {
-      display: block;
-      margin: 10px auto;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #007bff;
+    header {
+      background: #28a745;
       color: white;
-      cursor: pointer;
-      font-size: 16px;
-      text-align: center;
+      padding: 20px;
+    }
+    nav a {
+      margin: 0 15px;
       text-decoration: none;
-      transition: background 0.3s ease;
-    }
-    button:hover, a:hover {
-      background: #0056b3;
-    }
-    .hidden {
-      display: none;
-    }
-    #dailyTip {
-      background: #e9f5ff;
-      border-left: 4px solid #007bff;
-      padding: 10px;
-      border-radius: 6px;
-      margin-top: 15px;
+      color: white;
       font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      padding: 20px;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+    }
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #28a745;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .card a:hover {
+      background: #1e7e34;
     }
   </style>
 </head>
 <body>
-  <div class="container" id="home">
-    <h1>💰 Money Mentor</h1>
-    <p>Welcome! Let’s build your money skills step-by-step. Pick a tool below to start your journey.</p>
-    <a href="quiz.html">Take the Quiz</a>
-    <a href="saving.html">Saving Goals Tracker</a>
-    <a href="spending.html">Simple Spending Log</a>
-    <a href="investing.html">Beginner Investing Resources</a>
-    <a href="reminders.html">Email Reminders for Money Tips</a>
-    <a href="challenges.html">Gamified Challenges</a>
-    <p id="dailyTip"></p>
-  </div>
-  <script>
-    function showTip() {
-      const tips = [
-        "Pay yourself first: save before you spend.",
-        "Avoid lifestyle creep: keep expenses steady as income grows.",
-        "Track every dollar for one month.",
-        "Invest consistently, even in small amounts.",
-        "Build an emergency fund before investing heavily.",
-        "Separate wants from needs before making purchases.",
-        "Use windfalls (bonuses, tax refunds) to boost savings instead of spending all of it."
-      ];
-      const lastTipDate = localStorage.getItem('lastTipDate');
-      const today = new Date().toDateString();
-      let tip;
-      if (lastTipDate === today) {
-        tip = localStorage.getItem('dailyTip');
-      } else {
-        tip = tips[Math.floor(Math.random() * tips.length)];
-        localStorage.setItem('dailyTip', tip);
-        localStorage.setItem('lastTipDate', today);
-      }
-      document.getElementById('dailyTip').innerText = tip;
-    }
-    window.onload = showTip;
-  </script>
+  <header>
+    <h1>Money Mentor</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="savings.html">Saving Goals Tracker</a>
+      <a href="spending.html">Spending Log</a>
+      <a href="investing.html">Investing Resources</a>
+      <a href="reminders.html">Email Reminders</a>
+      <a href="challenges.html">Gamified Challenges</a>
+    </nav>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Welcome to Money Mentor</h2>
+      <p>Helping you build healthy money habits through simple tools and tips.</p>
+    </div>
+  </main>
 </body>
 </html>
