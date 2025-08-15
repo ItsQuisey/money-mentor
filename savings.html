@@ -17,9 +17,9 @@
       min-height: 100vh;
       transition: background 0.3s, color 0.3s;
     }
-    body.dark {
-      background: #1c1c1c;
-      color: #eee;
+    .dark-mode {
+      background: #121212;
+      color: #e0e0e0;
     }
     .container {
       background: #fff;
@@ -31,9 +31,9 @@
       animation: fadeIn 0.5s ease-in-out;
       transition: background 0.3s, color 0.3s;
     }
-    body.dark .container {
-      background: #2a2a2a;
-      color: #eee;
+    .dark-mode .container {
+      background: #1e1e1e;
+      color: #e0e0e0;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -43,24 +43,21 @@
       text-align: center;
       color: #28a745;
     }
-    body.dark h1 { color: #4fd47a; }
-
+    .dark-mode h1 {
+      color: #4caf50;
+    }
     label, p {
       display: block;
       margin: 10px 0 5px;
     }
     input, button, select {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 8px;
       font-size: 16px;
-    }
-    body.dark input, body.dark button, body.dark select {
-      background: #3a3a3a;
-      border: 1px solid #555;
-      color: #eee;
+      box-sizing: border-box;
     }
     button {
       background: #28a745;
@@ -78,10 +75,10 @@
       border-radius: 8px;
       margin-bottom: 12px;
       position: relative;
-      transition: background 0.3s;
+      animation: fadeIn 0.4s ease-in-out;
     }
-    body.dark .goal-item {
-      background: #333;
+    .dark-mode .goal-item {
+      background: #2a2a2a;
     }
     .delete-btn {
       position: absolute;
@@ -119,22 +116,22 @@
       text-decoration: none;
       color: #28a745;
     }
-    .toggle-dark {
+    .dark-mode a {
+      color: #4caf50;
+    }
+    .dark-toggle {
       position: absolute;
-      top: 20px;
+      top: 15px;
       right: 20px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      background: #444;
-      color: white;
+      background: none;
       border: none;
+      font-size: 22px;
       cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <button class="toggle-dark" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
   <div class="container">
     <h1>Savings Goals Tracker</h1>
     <label for="goalName">Goal Name:</label>
@@ -150,7 +147,7 @@
 
     <h3>Add More to Existing Goal:</h3>
     <select id="goalSelect"></select>
-    <input type="number" id="addAmount" placeholder="Amount to add" style="font-size:18px; padding:12px;"/>
+    <input type="number" id="addAmount" placeholder="Amount to add" />
     <button onclick="addMore()">Add More</button>
 
     <div id="goalsList"></div>
@@ -220,6 +217,7 @@
         renderGoals();
         document.getElementById('addAmount').value = '';
         
+        // Show success checkmark briefly
         setTimeout(() => {
           const check = document.getElementById(`check-${goal.id}`);
           if (check) {
@@ -247,12 +245,13 @@
     });
 
     function toggleDarkMode() {
-      document.body.classList.toggle('dark');
-      localStorage.setItem('darkMode', document.body.classList.contains('dark'));
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
     }
 
+    // Load dark mode preference
     if (localStorage.getItem('darkMode') === 'true') {
-      document.body.classList.add('dark');
+      document.body.classList.add('dark-mode');
     }
 
     renderGoals();
