@@ -9,88 +9,108 @@
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f5f7fa;
+      background: linear-gradient(135deg, #4cafef, #28a745);
       color: #333;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
     }
+
     .container {
       background: #fff;
       padding: 25px;
-      border-radius: 12px;
-      max-width: 700px;
+      border-radius: 16px;
+      max-width: 800px;
       width: 100%;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      animation: fadeIn 0.5s ease-in-out;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      animation: fadeIn 0.7s ease-in-out;
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    h1 {
+
+    h1, h2, h3 {
       text-align: center;
-      color: #007bff;
+      color: #28a745;
+      margin-bottom: 20px;
     }
-    ul {
-      list-style-type: none;
-      padding: 0;
-    }
-    li {
-      background: #e6f0ff;
-      padding: 12px;
-      border-radius: 8px;
+
+    p, li {
+      line-height: 1.6;
       margin-bottom: 10px;
     }
-    a.resource-link {
-      color: #007bff;
-      font-weight: bold;
-      text-decoration: none;
+
+    .resource-section {
+      background: #f0f9f4;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
     }
-    a.resource-link:hover {
-      text-decoration: underline;
-    }
-    p {
-      margin-top: 5px;
-      font-size: 14px;
-      color: #555;
-    }
-    a.back-link {
+
+    a {
       display: inline-block;
-      margin-top: 15px;
+      margin-top: 20px;
       text-decoration: none;
-      color: #007bff;
+      color: #28a745;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+    a:hover {
+      color: #1e7e34;
+    }
+
+    .resource-link {
+      display: block;
+      margin-bottom: 8px;
+      color: #0077cc;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    .resource-link:hover {
+      color: #005fa3;
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Beginner Investing Resources</h1>
-    <ul>
-      <li>
-        <a class="resource-link" href="https://www.investopedia.com/investing-4427685" target="_blank">Investopedia - Investing Basics</a>
-        <p>Comprehensive articles covering investing concepts, strategies, and key terms.</p>
-      </li>
-      <li>
-        <a class="resource-link" href="https://www.bogleheads.org/wiki/Getting_started" target="_blank">Bogleheads - Getting Started</a>
-        <p>A beginner-friendly guide on low-cost investing and retirement planning.</p>
-      </li>
-      <li>
-        <a class="resource-link" href="https://www.morningstar.com/articles/1099785/7-investing-tips-for-beginners" target="_blank">Morningstar - Investing Tips</a>
-        <p>Seven practical tips to help you start investing confidently.</p>
-      </li>
-      <li>
-        <a class="resource-link" href="https://www.fool.com/investing/how-to-invest/" target="_blank">The Motley Fool - How to Invest</a>
-        <p>Step-by-step guides and resources for building wealth over time.</p>
-      </li>
-      <li>
-        <a class="resource-link" href="https://www.schwab.com/learn/story/investing-101-introduction-to-investing" target="_blank">Charles Schwab - Investing 101</a>
-        <p>A free introduction to stocks, bonds, ETFs, and other investment vehicles.</p>
-      </li>
-    </ul>
+    <p>Start your investing journey with these beginner-friendly resources. Learn the basics, understand different asset classes, and build confidence step by step.</p>
 
-    <a class="back-link" href="index.html">⬅ Back to Home</a>
+    <div class="resource-section">
+      <h3>📘 Beginner Guides</h3>
+      <a class="resource-link" href="https://www.investopedia.com/investing-4427685" target="_blank">Investopedia: Investing 101</a>
+      <a class="resource-link" href="https://www.nerdwallet.com/best/financial-advisors/online" target="_blank">NerdWallet: Beginner Investing Guide</a>
+    </div>
+
+    <div class="resource-section">
+      <h3>💡 Videos & Courses</h3>
+      <a class="resource-link" href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtOfse2ncvffeelTrqvHR8kP" target="_blank">Crash Course Economics (YouTube)</a>
+      <a class="resource-link" href="https://www.coursera.org/learn/financial-markets-global" target="_blank">Coursera: Financial Markets</a>
+    </div>
+
+    <div class="resource-section">
+      <h3>📊 Useful Tools</h3>
+      <a class="resource-link" href="https://www.morningstar.com/" target="_blank">Morningstar: Stock & Fund Research</a>
+      <a class="resource-link" href="https://www.robinhood.com/" target="_blank">Robinhood: Beginner-Friendly Trading</a>
+    </div>
+
+    <div class="resource-section">
+      <h3>🔒 Key Concepts</h3>
+      <ul>
+        <li>Diversification reduces risk.</li>
+        <li>Invest for the long-term, avoid short-term speculation.</li>
+        <li>Understand fees, they eat into your returns.</li>
+        <li>Don’t invest money you can’t afford to lose.</li>
+      </ul>
+    </div>
+
+    <a href="index.html">⬅ Back to Home</a>
   </div>
 </body>
 </html>
