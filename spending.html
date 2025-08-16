@@ -9,7 +9,8 @@
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+      /* Blue top-left ➜ Green bottom-right, matching other pages */
+      background: linear-gradient(135deg, #4cafef, #28a745);
       color: #333;
       min-height: 100vh;
       display: flex;
@@ -18,20 +19,20 @@
     }
     .container {
       background: #fff;
-      padding: 30px;
-      border-radius: 20px;
+      padding: 25px;
+      border-radius: 16px;
       max-width: 700px;
       width: 100%;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-      animation: fadeIn 0.6s ease-in-out;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      animation: fadeIn 0.7s ease-in-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
     h1 {
       text-align: center;
-      color: #007bff;
+      color: #28a745;
       margin-bottom: 20px;
     }
     label {
@@ -44,46 +45,52 @@
       padding: 12px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 16px;
+      transition: 0.3s;
+      box-sizing: border-box;
+    }
+    input:focus {
+      border-color: #28a745;
+      outline: none;
+      box-shadow: 0 0 5px rgba(40,167,69,0.5);
     }
     button {
-      background: #007bff;
+      background: #28a745;
       color: #fff;
       border: none;
       cursor: pointer;
       transition: background 0.3s ease, transform 0.2s;
     }
     button:hover {
-      background: #0056b3;
-      transform: scale(1.05);
+      background: #1e7e34;
+      transform: translateY(-1px);
     }
     .log-item {
-      background: #f1f8ff;
+      background: #f0f9f4;
       padding: 12px;
       border-radius: 10px;
       margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
       animation: fadeIn 0.4s ease;
     }
     a {
       display: inline-block;
       margin-top: 20px;
       text-decoration: none;
-      color: #007bff;
+      color: #28a745;
       font-weight: bold;
       transition: color 0.3s;
     }
-    a:hover {
-      color: #0056b3;
-    }
+    a:hover { color: #1e7e34; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Simple Spending Log</h1>
+
     <label for="spendName">Expense Name:</label>
     <input type="text" id="spendName" placeholder="e.g. Coffee" />
 
@@ -117,7 +124,7 @@
     }
 
     function addSpending() {
-      const name = document.getElementById('spendName').value;
+      const name = document.getElementById('spendName').value.trim();
       const amount = parseFloat(document.getElementById('spendAmount').value);
       if (!name || isNaN(amount)) return;
       spendings.push({ name, amount });
