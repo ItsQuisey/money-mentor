@@ -72,8 +72,15 @@
       margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
       animation: fadeIn 0.4s ease;
+    }
+    .delete-btn {
+      color: red;
+      cursor: pointer;
+      margin-left: 10px;
+      font-weight: bold;
     }
     .filters {
       display: flex;
@@ -88,13 +95,15 @@
       justify-content: center;
       gap: 6px;
     }
-    .total {
+    .total, .income, .remaining {
       text-align: right;
-      margin-top: 15px;
+      margin-top: 10px;
       font-weight: bold;
       font-size: 18px;
-      color: #28a745;
     }
+    .total { color: red; }
+    .income { color: green; }
+    .remaining { color: #333; }
     a {
       display: inline-block;
       margin-top: 20px;
@@ -104,12 +113,14 @@
       transition: color 0.3s;
     }
     a:hover { color: #1e7e34; }
-    .icon { font-size: 18px; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Simple Spending Log</h1>
+
+    <label for="income">Monthly Income ($):</label>
+    <input type="number" id="income" placeholder="Enter monthly income" oninput="updateIncome()" />
 
     <label for="spendName">Expense Name:</label>
     <input type="text" id="spendName" placeholder="e.g. Coffee" />
@@ -129,22 +140,33 @@
 
     <h3>My Spending:</h3>
     <div id="spendingList"></div>
+    <div class="income" id="incomeDisplay">Monthly Income: $0.00</div>
     <div class="total" id="total"></div>
+    <div class="remaining" id="remaining"></div>
 
     <a href="index.html">⬅ Back to Home</a>
   </div>
 
   <script>
     let spendings = JSON.parse(localStorage.getItem('spendings')) || [];
+    let monthlyIncome = parseFloat(localStorage.getItem('income')) || 0;
     let currentFilter = 'all';
 
     function saveSpendings() {
       localStorage.setItem('spendings', JSON.stringify(spendings));
     }
 
+    function updateIncome() {
+      monthlyIncome = parseFloat(document.getElementById('income').value) || 0;
+      localStorage.setItem('income', monthlyIncome);
+      renderSpendings();
+    }
+
     function renderSpendings() {
       const list = document.getElementById('spendingList');
       const totalEl = document.getElementById('total');
+      const incomeEl = document.getElementById('incomeDisplay');
+      const remainingEl = document.getElementById('remaining');
       list.innerHTML = '';
 
       const now = new Date();
@@ -163,15 +185,17 @@
       });
 
       let total = 0;
-      filtered.forEach(s => {
+      filtered.forEach((s, index) => {
         const div = document.createElement('div');
         div.className = 'log-item';
-        div.textContent = `${s.name}: $${s.amount}`;
+        div.innerHTML = `${s.name}: $${s.amount.toFixed(2)} <span class="delete-btn" onclick="deleteSpending(${index})">❌</span>`;
         list.appendChild(div);
         total += s.amount;
       });
 
-      totalEl.textContent = `Total: $${total.toFixed(2)}`;
+      totalEl.textContent = `Total Expenses: $${total.toFixed(2)}`;
+      incomeEl.textContent = `Monthly Income: $${monthlyIncome.toFixed(2)}`;
+      remainingEl.textContent = `Remaining Balance: $${(monthlyIncome - total).toFixed(2)}`;
     }
 
     function addSpending() {
@@ -183,6 +207,12 @@
       renderSpendings();
       document.getElementById('spendName').value = '';
       document.getElementById('spendAmount').value = '';
+    }
+
+    function deleteSpending(index) {
+      spendings.splice(index, 1);
+      saveSpendings();
+      renderSpendings();
     }
 
     function setFilter(filter) {
@@ -203,6 +233,7 @@
       a.click();
     }
 
+    document.getElementById('income').value = monthlyIncome;
     renderSpendings();
   </script>
 </body>
