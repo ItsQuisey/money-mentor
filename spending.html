@@ -9,21 +9,21 @@
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f5f7fa;
+      background: linear-gradient(135deg, #d4fc79, #96e6a1);
       color: #333;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
     }
     .container {
       background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      max-width: 500px;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 700px;
       width: 100%;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-      animation: fadeIn 0.5s ease-in-out;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      animation: fadeIn 0.6s ease-in-out;
     }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -33,13 +33,14 @@
       text-align: center;
       color: #28a745;
     }
-    label, p {
+    label {
       display: block;
       margin: 10px 0 5px;
+      font-weight: 500;
     }
-    input, button, select {
+    input, button {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin-bottom: 15px;
       border: 1px solid #ccc;
       border-radius: 8px;
@@ -47,7 +48,7 @@
     }
     button {
       background: #28a745;
-      color: white;
+      color: #fff;
       border: none;
       cursor: pointer;
       transition: background 0.3s ease;
@@ -56,86 +57,69 @@
       background: #1e7e34;
     }
     .log-item {
-      background: #e6f4ea;
-      padding: 10px;
-      border-radius: 6px;
+      background: #f1fdf4;
+      padding: 12px;
+      border-radius: 8px;
       margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
     }
     a {
       display: inline-block;
       margin-top: 15px;
       text-decoration: none;
       color: #28a745;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Simple Spending Log</h1>
-    <label for="spendDate">Date:</label>
-    <input type="date" id="spendDate" />
-
-    <label for="spendCategory">Category:</label>
-    <select id="spendCategory">
-      <option value="Food">Food</option>
-      <option value="Transport">Transport</option>
-      <option value="Bills">Bills</option>
-      <option value="Shopping">Shopping</option>
-      <option value="Other">Other</option>
-    </select>
+    <label for="spendName">Expense Name:</label>
+    <input type="text" id="spendName" placeholder="e.g. Coffee" />
 
     <label for="spendAmount">Amount ($):</label>
-    <input type="number" id="spendAmount" placeholder="e.g. 25" />
+    <input type="number" id="spendAmount" placeholder="e.g. 5" />
 
     <button onclick="addSpending()">Add Spending</button>
 
+    <h3>My Spending:</h3>
     <div id="spendingList"></div>
 
     <a href="index.html">⬅ Back to Home</a>
   </div>
 
   <script>
+    let spendings = JSON.parse(localStorage.getItem('spendings')) || [];
+
+    function saveSpendings() {
+      localStorage.setItem('spendings', JSON.stringify(spendings));
+    }
+
+    function renderSpendings() {
+      const list = document.getElementById('spendingList');
+      list.innerHTML = '';
+      spendings.forEach(s => {
+        const div = document.createElement('div');
+        div.className = 'log-item';
+        div.textContent = `${s.name}: $${s.amount}`;
+        list.appendChild(div);
+      });
+    }
+
     function addSpending() {
-      const date = document.getElementById('spendDate').value;
-      const category = document.getElementById('spendCategory').value;
+      const name = document.getElementById('spendName').value;
       const amount = parseFloat(document.getElementById('spendAmount').value);
-
-      if (!date || !category || isNaN(amount)) {
-        alert('Please fill in all fields.');
-        return;
-      }
-
-      const logItem = document.createElement('div');
-      logItem.className = 'log-item';
-      logItem.innerHTML = `<strong>${date}</strong> - ${category}: $${amount.toFixed(2)}`;
-
-      document.getElementById('spendingList').appendChild(logItem);
+      if (!name || isNaN(amount)) return;
+      spendings.push({ name, amount });
       saveSpendings();
-
-      document.getElementById('spendDate').value = '';
-      document.getElementById('spendCategory').value = 'Food';
+      renderSpendings();
+      document.getElementById('spendName').value = '';
       document.getElementById('spendAmount').value = '';
     }
 
-    function saveSpendings() {
-      const spendings = [];
-      document.querySelectorAll('.log-item').forEach(item => {
-        spendings.push(item.innerHTML);
-      });
-      localStorage.setItem('spendingLog', JSON.stringify(spendings));
-    }
-
-    function loadSpendings() {
-      const spendings = JSON.parse(localStorage.getItem('spendingLog')) || [];
-      spendings.forEach(html => {
-        const logItem = document.createElement('div');
-        logItem.className = 'log-item';
-        logItem.innerHTML = html;
-        document.getElementById('spendingList').appendChild(logItem);
-      });
-    }
-
-    window.onload = loadSpendings;
+    renderSpendings();
   </script>
 </body>
 </html>
