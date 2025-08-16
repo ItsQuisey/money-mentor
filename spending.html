@@ -119,8 +119,8 @@
   <div class="container">
     <h1>Simple Spending Log</h1>
 
-    <label for="income">Monthly Income ($):</label>
-    <input type="number" id="income" placeholder="Enter monthly income" oninput="updateIncome()" />
+    <label for="income">Budget ($):</label>
+    <input type="number" id="income" placeholder="Enter Budget" oninput="updateIncome()" />
 
     <label for="spendName">Expense Name:</label>
     <input type="text" id="spendName" placeholder="e.g. Coffee" />
@@ -140,7 +140,7 @@
 
     <h3>My Spending:</h3>
     <div id="spendingList"></div>
-    <div class="income" id="incomeDisplay">Monthly Income: $0.00</div>
+    <div class="income" id="incomeDisplay">Budget: $0.00</div>
     <div class="total" id="total"></div>
     <div class="remaining" id="remaining"></div>
 
@@ -194,7 +194,7 @@
       });
 
       totalEl.textContent = `Total Expenses: $${total.toFixed(2)}`;
-      incomeEl.textContent = `Monthly Income: $${monthlyIncome.toFixed(2)}`;
+      incomeEl.textContent = `Budget: $${monthlyIncome.toFixed(2)}`;
       remainingEl.textContent = `Remaining Balance: $${(monthlyIncome - total).toFixed(2)}`;
     }
 
