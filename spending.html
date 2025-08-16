@@ -9,7 +9,6 @@
       font-family: 'Segoe UI', Tahoma, sans-serif;
       margin: 0;
       padding: 0;
-      /* Blue top-left ➜ Green bottom-right, matching other pages */
       background: linear-gradient(135deg, #4cafef, #28a745);
       color: #333;
       min-height: 100vh;
@@ -21,7 +20,7 @@
       background: #fff;
       padding: 25px;
       border-radius: 16px;
-      max-width: 700px;
+      max-width: 750px;
       width: 100%;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
       animation: fadeIn 0.7s ease-in-out;
@@ -40,7 +39,7 @@
       margin: 10px 0 5px;
       font-weight: 500;
     }
-    input, button {
+    input, button, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -50,7 +49,7 @@
       transition: 0.3s;
       box-sizing: border-box;
     }
-    input:focus {
+    input:focus, select:focus {
       border-color: #28a745;
       outline: none;
       box-shadow: 0 0 5px rgba(40,167,69,0.5);
@@ -76,6 +75,26 @@
       box-shadow: 0 3px 6px rgba(0,0,0,0.1);
       animation: fadeIn 0.4s ease;
     }
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    .filters button {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .total {
+      text-align: right;
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #28a745;
+    }
     a {
       display: inline-block;
       margin-top: 20px;
@@ -85,6 +104,7 @@
       transition: color 0.3s;
     }
     a:hover { color: #1e7e34; }
+    .icon { font-size: 18px; }
   </style>
 </head>
 <body>
@@ -97,16 +117,26 @@
     <label for="spendAmount">Amount ($):</label>
     <input type="number" id="spendAmount" placeholder="e.g. 5" />
 
-    <button onclick="addSpending()">Add Spending</button>
+    <button onclick="addSpending()">➕ Add Spending</button>
+
+    <div class="filters">
+      <button onclick="setFilter('all')">📋 All</button>
+      <button onclick="setFilter('today')">📅 Today</button>
+      <button onclick="setFilter('week')">🗓️ This Week</button>
+      <button onclick="setFilter('month')">📆 This Month</button>
+      <button onclick="exportCSV()">⬇️ Export CSV</button>
+    </div>
 
     <h3>My Spending:</h3>
     <div id="spendingList"></div>
+    <div class="total" id="total"></div>
 
     <a href="index.html">⬅ Back to Home</a>
   </div>
 
   <script>
     let spendings = JSON.parse(localStorage.getItem('spendings')) || [];
+    let currentFilter = 'all';
 
     function saveSpendings() {
       localStorage.setItem('spendings', JSON.stringify(spendings));
@@ -114,24 +144,63 @@
 
     function renderSpendings() {
       const list = document.getElementById('spendingList');
+      const totalEl = document.getElementById('total');
       list.innerHTML = '';
-      spendings.forEach(s => {
+
+      const now = new Date();
+      let filtered = spendings.filter(s => {
+        const date = new Date(s.date);
+        if (currentFilter === 'today') {
+          return date.toDateString() === now.toDateString();
+        } else if (currentFilter === 'week') {
+          const weekAgo = new Date();
+          weekAgo.setDate(now.getDate() - 7);
+          return date >= weekAgo;
+        } else if (currentFilter === 'month') {
+          return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+        }
+        return true;
+      });
+
+      let total = 0;
+      filtered.forEach(s => {
         const div = document.createElement('div');
         div.className = 'log-item';
         div.textContent = `${s.name}: $${s.amount}`;
         list.appendChild(div);
+        total += s.amount;
       });
+
+      totalEl.textContent = `Total: $${total.toFixed(2)}`;
     }
 
     function addSpending() {
       const name = document.getElementById('spendName').value.trim();
       const amount = parseFloat(document.getElementById('spendAmount').value);
       if (!name || isNaN(amount)) return;
-      spendings.push({ name, amount });
+      spendings.push({ name, amount, date: new Date().toISOString() });
       saveSpendings();
       renderSpendings();
       document.getElementById('spendName').value = '';
       document.getElementById('spendAmount').value = '';
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      renderSpendings();
+    }
+
+    function exportCSV() {
+      let csv = 'Name,Amount,Date\n';
+      spendings.forEach(s => {
+        csv += `${s.name},${s.amount},${s.date}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'spending_log.csv';
+      a.click();
     }
 
     renderSpendings();
